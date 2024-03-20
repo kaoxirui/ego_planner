@@ -1,0 +1,26 @@
+<launch>
+
+   <!-- d435 -->
+	<include file="$(find ego_planner)/launch/poao/d435.launch">
+	</include>
+
+   <!-- nodelet for d435 -->
+	<include file="$(find ego_planner)/launch/poao/nodelet.launch">
+	</include>
+
+   <!-- fcu to depth(D435) -->
+   <!-- <node pkg="tf" type="static_transform_publisher" name="tf_depth_camera" args="0 0 0 0 0 0 fcu camera1_link 10"/> -->
+
+   <!-- t265: camera_odom_frame -> camera_pose_frame -->
+   <!-- 发布t265与d435的位姿偏差，以此发布d435的里程计 -->
+	<node pkg="tf2_ros" type="static_transform_publisher" name="tf_fcu_d435"
+          args="0 0 0 0 0 0 fcu camera1_link "/>
+
+   <node pkg="ego_planner" type="camera_pose_publisher.py" name="camera_pose_publisher" output="screen">
+      <param name="~parent_frame" value="local_origin" type="string"/>
+      <param name="~child_frame" value="camera1_depth_frame" type="string"/>
+      <param name="~pose_topic" value="/camera1/depth/pose" type="string"/>
+
+   </node>
+
+</launch>

@@ -1,0 +1,44 @@
+一、yolov5环境配置
+1、apt换源和pip换源
+https://blog.csdn.net/qq_21843433/article/details/115431927
+
+gedit ~/.pip/pip.conf编辑，然后写入
+
+2、yolov5环境快速配置
+
+注意：在安装torch之前先pip3 install pillow
+
+https://blog.csdn.net/qq_41319718/article/details/119607668
+
+此时能够单独运行yolov5，下面是yolov5_ros的环境配置
+
+3、opencv安装
+https://blog.csdn.net/weixin_44003563/article/details/90404745
+
+注意：最后一步跑例程的时候，make的过程中会报错： 
+example.cpp:1:10: fatal error:opencv2/core.hpp:No such file or directory
+ #include "opencv2/core.hpp"
+解决方案：
+sudo ln -s /usr/local/include/opencv4/opencv2 /usr/include/opencv2
+
+4、python3的cv_bridge源码安装
+https://blog.csdn.net/qq_41426807/article/details/125537375
+
+注意：编译完之后记得修改cv_bridge1_ws/install/lib/python3/dist-packages/cv_bridge/core.py文件
+添加
+import sys
+sys.path.append('/opt/ros/melodic/lib/python2.7/dist-packages')
+
+ubuntu18.04+ros melodic +opencv4.5.5对应cv_bridge安装
+https://blog.csdn.net/csdn_poseidon/article/details/124872512
+
+记得修改CMakelists.txt中opencv和cv_bridge的路径，至此能够运行yolov5_ros。
+-
+二、相机话题的发布。
+使用usb_cam包，修改launch文件即可。
+
+三、运行流程
+1、在test_ws工作空间下打开终端，source下，然后运行相机，roslaunch usb_cam usb_cam-test.launch
+2、在test_ws下新建终端，source下，然后启动yolov5_ros，根据需求修改launch文件中的模型和参数文件，roslaunch yolov5_ros yolov5.launch
+注意：在启动yolo_ros时出现类似dnn的错误，修改launch 文件，将dnn对应的参数改为false。
+3、启动rviz或者修改yolov5.launch文件，显示图像，在test_ws下source下，然后使用rostopic echo /yolov5/detections 显示类别和坐标。

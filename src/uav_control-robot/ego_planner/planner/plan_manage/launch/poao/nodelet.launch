@@ -1,0 +1,10 @@
+<launch>
+
+    <!-- Load custom console configuration -->
+    <!-- <env name="ROSCONSOLE_CONFIG_FILE" value="$(find local_planner)/resource/custom_rosconsole.conf"/> -->
+
+    <!-- Launch local planner -->
+    <arg name="manager"             default="nodelet_manager"/>
+    <node pkg="nodelet" type="nodelet" name="$(arg manager)" args="manager" output="screen"/>
+
+</launch>
